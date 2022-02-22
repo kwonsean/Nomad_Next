@@ -19,11 +19,7 @@ export default function NavBar2() {
             background-color: purple;
           }
           a {
-            text-decoration: none;
             color: white;
-          }
-          a:first-child {
-            margin-right: 20px;
           }
           .active {
             color: yellow;
