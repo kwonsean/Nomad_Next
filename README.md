@@ -74,3 +74,52 @@ export default function Home() {
 
 - globals.css파일은 기본적으로 제공하는 파일로 우리가 만든 파일(index.js, about.js)에는 import할 수 없다. 이런 파일에는 무조건 module.css형식으로 작성한 css파일만 import 가능하다.
 - 반면 \_app.js파일에는 그냥 css파일을 import 할 수 있다. 따라서 \<style jsx global>을 이용하는 것보다 css파일을 이용하는게 더 깔끔하게 전역적인 스타일링을 할 수 있는 방법인 것 같다.
+
+## HEAD
+
+- `import Head from "next/head"`를 통해서 Head태그를 가져와 HTML요소에 title, meta같은 부분들을 작성할 수 있다.
+- SEO(검색 엔진 최적화)를 위해 중요한 부분이며 next.js에서 Head태그를 이용하여 손쉽게 작성 가능하다.
+- 현재 내 코드에서는 title을 pathName에서 추출하여 받아서 사용하도록 하여 \_app.js파일에서 한번만 작성해 사용하고 있다.
+
+## redirects
+
+```js
+ async redirects() {
+    return [
+      {
+        source: "/old-blog/:path*",
+        destination: "/new-blog/:path*",
+        permanent: false,
+      },
+    ];
+  },
+```
+
+- redirects는 source에 입력한 주소로 이동시 destination에 입력한 주소로 redirects시킴.  
+  이때 :path\* 처럼 작성을 하면 blog/ 뒤 부분이 그대로 남은 상태로 redirect가 됨  
+  즉, ID값을 그대로 유지한채 redirect가 가능하다.
+
+## rewrites
+
+- 이건 더 신기한 기능인데 redirects처럼 source에 입력한 주소로 이동시 destination에 입력한 주소로 이동하게 되는건 동일하지만 url에 변화가 없음  
+  즉, /old-blog/주소는 그대로 인데 화면은 /new-blog/주소가 보이게 된다.
+- 이 방법을 이용하여 API를 호출할 수 도 있고 이를 통해 API KEY를 숨길 수 있게 된다.
+
+```js
+ async rewrites() {
+    return [
+      {
+        source: "/api/movies",
+        destination: `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}&language=en-US&page=1`,
+      },
+    ];
+  },
+```
+
+## getServerSideProps
+
+- 서버사이드렌더링을 위해 사용하는 함수
+- 이 부분에 작성한 코드는 서버에서 작동하게 된다. 따라서 이곳에 API를 호출하는 코드를 작성하게 되면 화면은 API가 호출이 다 된후에 그려지게 될 것이다.
+- 즉, 기본적인 UI가 나오고 Loading...이 나오는 것이 아닌 전체 요소가 다 로딩될때까지 기다린 후 한번에 화면이 그려지게 된다.
+- 이렇게 되면 유저는 loading화면을 볼 필요가 없어지지만 API호출이 느린경우 아무것도 보지 못하는 단점이 존재한다.  
+  하지만 SEO측면에서는 소스코드에 API데이터가 포함되기 때문에 장점이 많다.
