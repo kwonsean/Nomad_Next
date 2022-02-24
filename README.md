@@ -145,4 +145,4 @@ export default function Home() {
 
 ## env
 
-- env파일에서 API*KEY를 brower에서 사용하기 위해서는 `NEXT_PUBLIC*`를 붙여주어야 js파일에서 가져와 사용이 가능하다.
+- env파일에서 API\*KEY를 brower에서 사용하기 위해서는 `NEXT_PUBLIC_`를 붙여주어야 js파일에서 가져와 사용이 가능하다.
